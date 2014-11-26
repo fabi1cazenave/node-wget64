@@ -1,0 +1,19 @@
+{
+  "name": "wget64",
+  "version": "0.0.0",
+  "description": "Convert an HTML document to a single-file archive, using base64 data-urls",
+  "preferGlobal": "true",
+  "main": "index.js",
+  "bin": { "wget64": "index.js" },
+  "author": "Fabien Cazenave",
+  "keywords": ["html", "base64", "converter"],
+  "repository" : {
+    "type": "git",
+    "url": "https://github.com/fabi1cazenave/node-wget64.git"
+  },
+  "dependencies": {
+    "cheerio": "*",
+    "mime": "*"
+  },
+  "engines": { "node": "*" }
+}
