@@ -1,6 +1,6 @@
 {
   "name": "wget64",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Convert an HTML document to a single-file archive, using base64 data-urls",
   "preferGlobal": "true",
   "main": "index.js",
