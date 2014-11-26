@@ -176,8 +176,9 @@ function wget(inputURL, outputFile) {
  */
 
 if (process.argv.length < 3) {
-  console.error('usage: ./wget.js URL');
-  throw 'missing URI argument';
+  console.error('wget64: missing URL');
+  console.error('Usage: wget64 [URL]');
+  process.exit(1);
 }
 wget(process.argv[2], 'output.html');
 
