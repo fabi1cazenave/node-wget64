@@ -7,7 +7,7 @@
   "bin": { "wget64": "index.js" },
   "author": "Fabien Cazenave",
   "license": "MIT",
-  "keywords": ["html", "base64", "converter", "wget"],
+  "keywords": ["html", "base64", "converter", "scraper", "wget"],
   "repository" : {
     "type": "git",
     "url": "git://github.com/fabi1cazenave/node-wget64.git"
