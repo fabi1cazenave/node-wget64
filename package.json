@@ -1,10 +1,10 @@
 {
   "name": "wget64",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Convert an HTML document to a single-file archive, using base64 data-urls",
   "preferGlobal": "true",
   "main": "index.js",
-  "bin": { "wget64": "index.js" },
+  "bin": "index.js",
   "author": "Fabien Cazenave",
   "license": "MIT",
   "keywords": ["html", "base64", "converter", "scraper", "wget"],

@@ -5,6 +5,8 @@
 var fs      = require('fs');
 var url     = require('url');
 var http    = require('http');
+var https   = require('https');
+
 var mime    = require('mime');
 var cheerio = require('cheerio');
 
@@ -21,7 +23,21 @@ function download(href, encoding, onsuccess, onerror) {
   onsuccess = (typeof onsuccess == 'function') ? onsuccess : function() {};
   onerror   = (typeof onerror   == 'function') ? onerror   : function() {};
 
-  http.get(href, function(res) {
+  var protocol = url.parse(href).protocol;
+  var get = function() {
+    console.error(protocol + ' is not supported');
+  };
+
+  switch (protocol) {
+    case 'http:':
+      get = http.get;
+      break;
+    case 'https:':
+      get = https.get;
+      break;
+  }
+
+  get(href, function(res) {
     var data = '';
     if (encoding) {
       res.setEncoding(encoding);
@@ -37,6 +53,10 @@ function download(href, encoding, onsuccess, onerror) {
 var urlTrim = /^url\(['"]?|['"]?\)$/g;
 var urlDetect = /url\(['"]?[^'"\)]*['"]?\)/g;
 var urlPattern = /url\((['"]?)([^'"\)]*)(['"]?)\)/g; // unused
+
+function isDataURL(href) {
+  return /^data:/.test(href);
+}
 
 function inlineStylesheets(doc, baseHref, callback) {
   var extStylesheets = doc('link[rel=stylesheet]');
@@ -87,9 +107,10 @@ function inlineScripts(doc, baseHref, callback) {
 
 function getMediaURLs(doc, baseHref, callback) {
   var URLs = [];
+
   function pushURL(href) {
     href = url.resolve(baseHref, href);
-    if (URLs.indexOf(href) < 0) {
+    if ((URLs.indexOf(href) < 0) && !isDataURL(href)) {
       URLs.push(href);
       console.log(href);
     }
@@ -119,6 +140,7 @@ function getMediaURLs(doc, baseHref, callback) {
       });
     });
   }
+
   return URLs;
 }
 
@@ -127,7 +149,7 @@ function useDataURLs(doc, baseHref, dataURLs) {
     var css = doc(element).text();
     css = css.replace(urlDetect, function(match, offset, str) {
       var href = url.resolve(baseHref, match.replace(urlTrim, ''));
-      if (!(href in dataURLs) || !dataURLs[href]) {
+      if ((!(href in dataURLs) || !dataURLs[href]) && !isDataURL(href)) {
         console.error('missing data-URL: ' + href);
       }
       return 'url(' + dataURLs[href] + ')';
@@ -137,7 +159,7 @@ function useDataURLs(doc, baseHref, dataURLs) {
 
   doc('img, audio, video').each(function(index, element) {
     var src = url.resolve(baseHref, doc(element).attr('src'));
-    if (!(src in dataURLs) || !dataURLs[src]) {
+    if ((!(src in dataURLs) || !dataURLs[src]) && !isDataURL(src)) {
       console.error('missing data-URL: ' + src);
     }
     doc(element).attr('src', dataURLs[src]);
